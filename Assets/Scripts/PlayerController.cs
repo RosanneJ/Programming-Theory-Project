@@ -4,19 +4,92 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody m_Rigidbody;
-    public float Speed;
-    
+    private Camera _mGameCamera;
+    private Rigidbody _mRigidbody;
+
+    private Tool _mToolHeld;
+
+    private const float Speed = 5f;
+
     void Start()
     {
-        m_Rigidbody = GetComponent<Rigidbody>();
+        _mRigidbody = GetComponent<Rigidbody>();
+        _mGameCamera = GetComponentInChildren<Camera>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateViewDirection();
         UpdatePosition();
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            UpdateMouseClick();   
+        }
+    }
+    
+    private void UpdateMouseClick()
+    {
+        if (_mToolHeld != null)
+        {
+            ToolHandling();
+        }
+        else
+        {
+            TakeTool();
+        }
+    }
+
+    private void ToolHandling()
+    {
+        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        { 
+            if (hit.transform.CompareTag("Terrain"))
+            {
+                DropTool();
+                _mToolHeld = null;
+            } else if (hit.transform.CompareTag("Garden"))
+            {
+                _mToolHeld.PerformAction();
+            }
+        }
+    }
+    
+    private void TakeTool()
+    {
+        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.CompareTag("Tool"))
+            {
+                //the collider could be children of the unit, so we make sure to check in the parent
+                var tool = hit.collider.GetComponentInParent<Tool>();
+                _mToolHeld = tool;
+                AttachToPlayer(tool);
+            }
+
+        }
+    }
+
+    private void DropTool()
+    {
+        Destroy(_mToolHeld.gameObject.GetComponent<FixedJoint>());
+        _mToolHeld.ResetPosition();
+        _mToolHeld = null;
+    }
+
+    private void AttachToPlayer(Tool tool)
+    {
+        var playerTransform = transform;
+        var localPosition = playerTransform.localPosition;
+
+        tool.transform.position = new Vector3(localPosition.x -2, localPosition.y + 2, localPosition.z + 3);
+        tool.transform.Rotate(0, 90, 0);
+        tool.gameObject.AddComponent<FixedJoint>();
+        tool.GetComponent<FixedJoint>().connectedBody = _mRigidbody;
+
     }
 
     private void UpdateViewDirection()
@@ -27,20 +100,20 @@ public class PlayerController : MonoBehaviour
 
     private void UpdatePosition()
     {
-        if (Input.GetKeyDown(PlayerControl.Forward))
+        if (Input.GetKey(PlayerControl.Forward))
         {
-            m_Rigidbody.velocity = transform.forward * Speed;
-        } else if (Input.GetKeyDown(PlayerControl.Backward))
+            _mRigidbody.velocity = transform.forward * Speed;
+        } else if (Input.GetKey(PlayerControl.Backward))
         {
-            m_Rigidbody.velocity = -transform.forward * Speed;
+            _mRigidbody.velocity = -transform.forward * Speed;
         }
 
-        if (Input.GetKeyDown(PlayerControl.Left))
+        if (Input.GetKey(PlayerControl.Left))
         {
-            m_Rigidbody.velocity = -transform.right * Speed;
-        } else if (Input.GetKeyDown(PlayerControl.Right))
+            _mRigidbody.velocity = -transform.right * Speed;
+        } else if (Input.GetKey(PlayerControl.Right))
         {
-            m_Rigidbody.velocity = transform.right * Speed;
+            _mRigidbody.velocity = transform.right * Speed;
         }
     }
 }
