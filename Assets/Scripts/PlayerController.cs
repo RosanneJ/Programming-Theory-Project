@@ -4,40 +4,48 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Camera _mGameCamera;
-    private Rigidbody _mRigidbody;
-
+    public Transform playerBody;
+    public CharacterController controller;
+    
+    private float xRotation = 0f;
     private Tool _mToolHeld;
-
-    private const float Speed = 5f;
+    private float mouseSensitivity = 200f;
+    private Camera _mGameCamera;
+    private const float Speed = 10f;
 
     void Start()
     {
-        _mRigidbody = GetComponent<Rigidbody>();
-        _mGameCamera = GetComponentInChildren<Camera>();
+        Cursor.lockState = CursorLockMode.Locked;
+        _mGameCamera = GetComponent<Camera>();
     }
 
     void Update()
     {
         UpdateViewDirection();
         UpdatePosition();
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            UpdateMouseClick();   
+        
+        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        { 
+            if (hit.transform.CompareTag("Tool"))
+            {
+                Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
+                if (interactable.closeEnough)
+                {
+                    interactable.ShowInfo();
+                }
+                else
+                {
+                    interactable.HideInfo();
+                }
+            }
         }
-    }
-    
-    private void UpdateMouseClick()
-    {
+
         if (_mToolHeld != null)
         {
             ToolHandling();
         }
-        else
-        {
-            TakeTool();
-        }
+
     }
 
     private void ToolHandling()
@@ -75,45 +83,36 @@ public class PlayerController : MonoBehaviour
 
     private void DropTool()
     {
-        Destroy(_mToolHeld.gameObject.GetComponent<FixedJoint>());
+        _mToolHeld.transform.parent = null;
         _mToolHeld.ResetPosition();
         _mToolHeld = null;
     }
 
     private void AttachToPlayer(Tool tool)
     {
-        var playerTransform = transform;
-        var localPosition = playerTransform.localPosition;
-
-        tool.transform.position = new Vector3(localPosition.x -2, localPosition.y + 2, localPosition.z + 3);
-        tool.transform.Rotate(0, 90, 0);
-        tool.gameObject.AddComponent<FixedJoint>();
-        tool.GetComponent<FixedJoint>().connectedBody = _mRigidbody;
-
+        tool.transform.parent = playerBody;
+        tool.transform.position = new Vector3(0, 0, 0);
     }
 
     private void UpdateViewDirection()
     {
-        float y = 5 * Input.GetAxis("Mouse X");
-        transform.Rotate(0, y, 0);
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerBody.Rotate(Vector3.up * mouseX);
     }
 
     private void UpdatePosition()
     {
-        if (Input.GetKey(PlayerControl.Forward))
-        {
-            _mRigidbody.velocity = transform.forward * Speed;
-        } else if (Input.GetKey(PlayerControl.Backward))
-        {
-            _mRigidbody.velocity = -transform.forward * Speed;
-        }
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(PlayerControl.Left))
-        {
-            _mRigidbody.velocity = -transform.right * Speed;
-        } else if (Input.GetKey(PlayerControl.Right))
-        {
-            _mRigidbody.velocity = transform.right * Speed;
-        }
+        Vector3 move = playerBody.right * x + playerBody.forward * z;
+
+        controller.Move(move * Speed * Time.deltaTime);
     }
 }
