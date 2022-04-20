@@ -1,19 +1,31 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
     public bool closeEnough;
-    public Canvas infoCanvas;
+    [SerializeField] Canvas infoCanvas;
+    
 
 
-    public void ShowInfo()
+    public void ShowInfo(Camera camera)
     {
-        
+        infoCanvas.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
+        if (!infoCanvas.isActiveAndEnabled)
+        {
+            infoCanvas.transform.SetParent(transform);
+            
+            infoCanvas.gameObject.SetActive(true);
+        }
     }
     
     public void HideInfo()
     {
+        if (infoCanvas.isActiveAndEnabled)
+        {
+            infoCanvas.gameObject.SetActive(false);
+        }
         
     }
 
@@ -22,7 +34,6 @@ public class Interactable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             closeEnough = true;
-            infoCanvas.gameObject.SetActive(true);
         }
     }
 
@@ -31,8 +42,6 @@ public class Interactable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             closeEnough = false;
-            infoCanvas.gameObject.SetActive(false);
         }
     }
-
 }

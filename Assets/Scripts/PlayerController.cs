@@ -12,11 +12,13 @@ public class PlayerController : MonoBehaviour
     private float mouseSensitivity = 200f;
     private Camera _mGameCamera;
     private const float Speed = 10f;
+    private Vector3 _screenCenter;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         _mGameCamera = GetComponent<Camera>();
+        _screenCenter = new Vector3(x: Screen.width / 2, Screen.height / 2);
     }
 
     void Update()
@@ -24,7 +26,7 @@ public class PlayerController : MonoBehaviour
         UpdateViewDirection();
         UpdatePosition();
         
-        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
+        var ray = _mGameCamera.ScreenPointToRay(_screenCenter);
         if (Physics.Raycast(ray, out var hit))
         { 
             if (hit.transform.CompareTag("Tool"))
@@ -32,7 +34,7 @@ public class PlayerController : MonoBehaviour
                 Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
                 if (interactable.closeEnough)
                 {
-                    interactable.ShowInfo();
+                    interactable.ShowInfo(_mGameCamera);
                 }
                 else
                 {
