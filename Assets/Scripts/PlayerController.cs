@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Screen;
 
 public class PlayerController : MonoBehaviour
 {
     public Transform playerBody;
     public CharacterController controller;
-    
-    private float xRotation = 0f;
+
+    private float _xRotation = 0f;
     private Tool _mToolHeld;
     private float mouseSensitivity = 200f;
     private Camera _mGameCamera;
@@ -18,103 +19,91 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         _mGameCamera = GetComponent<Camera>();
-        _screenCenter = new Vector3(x: Screen.width / 2, Screen.height / 2);
+        _screenCenter = new Vector3(width / 2, height / 2);
     }
 
     void Update()
     {
         UpdateViewDirection();
         UpdatePosition();
+
+        if (Physics.Raycast(_mGameCamera.ScreenPointToRay(_screenCenter), out var hit))
+        {
+            UpdateRaycast(hit);
+        }
+    }
+
+    private void UpdateRaycast(RaycastHit hit)
+    {
+        var interactable = hit.collider.GetComponentInParent<Interactable>();
+        if (interactable != null)
+        {
+            interactable.UpdateInformationPanel(_mGameCamera);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            PerformAction(hit);
+        }
+    }
+
+    private void PerformAction(RaycastHit hit)
+    {
+        switch (hit.transform.tag)
+        {
+            case "Tool":
+                PickUpTool(hit.collider.GetComponentInParent<Tool>());
+                break;
+            case "Garden":
+                UseTool();
+                break;
+            case "Terrain":
+                DropToolInPossession();
+                break;
+        }
+    }
+
+    private void UseTool()
+    {
+        if (_mToolHeld == null) return;
         
-        var ray = _mGameCamera.ScreenPointToRay(_screenCenter);
-        if (Physics.Raycast(ray, out var hit))
-        { 
-            if (hit.transform.CompareTag("Tool"))
-            {
-                Interactable interactable = hit.collider.GetComponentInParent<Interactable>();
-                if (interactable.closeEnough)
-                {
-                    interactable.ShowInfo(_mGameCamera);
-                }
-                else
-                {
-                    interactable.HideInfo();
-                }
-            }
-        }
-
-        if (_mToolHeld != null)
-        {
-            ToolHandling();
-        }
-
+        _mToolHeld.PerformAction();
     }
 
-    private void ToolHandling()
+    private void PickUpTool(Tool newTool)
     {
-        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit))
-        { 
-            if (hit.transform.CompareTag("Terrain"))
-            {
-                DropTool();
-                _mToolHeld = null;
-            } else if (hit.transform.CompareTag("Garden"))
-            {
-                _mToolHeld.PerformAction();
-            }
-        }
-    }
-    
-    private void TakeTool()
-    {
-        var ray = _mGameCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.transform.CompareTag("Tool"))
-            {
-                //the collider could be children of the unit, so we make sure to check in the parent
-                var tool = hit.collider.GetComponentInParent<Tool>();
-                _mToolHeld = tool;
-                AttachToPlayer(tool);
-            }
-
-        }
+        DropToolInPossession();
+        _mToolHeld = newTool;
+        newTool.IsBeingHeldBy(playerBody);
     }
 
-    private void DropTool()
+    private void DropToolInPossession()
     {
-        _mToolHeld.transform.parent = null;
-        _mToolHeld.ResetPosition();
+        if (_mToolHeld == null) return;
+
+        _mToolHeld.IsDropped();
         _mToolHeld = null;
-    }
-
-    private void AttachToPlayer(Tool tool)
-    {
-        tool.transform.parent = playerBody;
-        tool.transform.position = new Vector3(0, 0, 0);
     }
 
     private void UpdateViewDirection()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        var mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        var mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation -= mouseY;
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
     }
 
     private void UpdatePosition()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        var x = Input.GetAxis("Horizontal");
+        var z = Input.GetAxis("Vertical");
 
-        Vector3 move = playerBody.right * x + playerBody.forward * z;
+        var move = playerBody.right * x + playerBody.forward * z;
 
-        controller.Move(move * Speed * Time.deltaTime);
+        controller.Move(move * (Speed * Time.deltaTime));
     }
 }

@@ -6,29 +6,43 @@ using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
-    public bool closeEnough;
     [SerializeField] Canvas infoCanvasPrefab;
     [SerializeField] private string infoText;
 
+    protected bool shouldShowInfo = true;
+    
+    private bool _closeEnough;
     private Canvas _instantiatedCanvas;
 
-    public void ShowInfo(Camera camera)
+    public void UpdateInformationPanel(Camera playerCamera)
     {
-        infoCanvasPrefab.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
+        if (_closeEnough && shouldShowInfo)
+        {
+            ShowInfo(playerCamera);
+        }
+        else
+        {
+            HideInfo();
+        }
+    }
+
+    private void ShowInfo(Camera playerCamera)
+    {
+        infoCanvasPrefab.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
         
         if (_instantiatedCanvas == null)
         {
-            infoCanvasPrefab.worldCamera = camera;
+            infoCanvasPrefab.worldCamera = playerCamera;
             infoCanvasPrefab.GetComponentInChildren<TextMeshProUGUI>().SetText(infoText);
             _instantiatedCanvas = Instantiate(infoCanvasPrefab, transform);
         }
         else
         {
-            _instantiatedCanvas.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
+            _instantiatedCanvas.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
         }
     }
     
-    public void HideInfo()
+    private void HideInfo()
     {
         if (_instantiatedCanvas != null)
         {
@@ -41,7 +55,7 @@ public class Interactable : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            closeEnough = true;
+            _closeEnough = true;
         }
     }
 
@@ -49,7 +63,7 @@ public class Interactable : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            closeEnough = false;
+            _closeEnough = false;
         }
     }
 }

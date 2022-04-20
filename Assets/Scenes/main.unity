@@ -602,21 +602,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfbe8e67c53a4fcebc23da71e7950dc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1575782231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575782229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 569d5a2a1b6a4a1e9bf18318c2cd7aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  closeEnough: 0
   infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
   infoText: This is a watering can
+  xPositionHold: 2.5
+  yPositionHold: 0.3
+  xRotationHold: 0
+  yRotationHold: 90
+  zRotationHold: 0
 --- !u!135 &1575782232
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -628,7 +620,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 15
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1685677634
 GameObject:
@@ -838,6 +830,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38370792ad1f4834a051db2fbdd09f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
+  infoText: This is a shovel
+  xPositionHold: 1
+  yPositionHold: 0.3
+  xRotationHold: 40
+  yRotationHold: 180
+  zRotationHold: 0
 --- !u!135 &2087593748
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -849,23 +848,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 30
+  m_Radius: 40
   m_Center: {x: 0, y: 0, z: 12}
---- !u!114 &2087593749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087593746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 569d5a2a1b6a4a1e9bf18318c2cd7aa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  closeEnough: 0
-  infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
-  infoText: This is a shovel
 --- !u!1001 &2089512271
 PrefabInstance:
   m_ObjectHideFlags: 0
