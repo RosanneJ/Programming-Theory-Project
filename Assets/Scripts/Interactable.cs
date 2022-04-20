@@ -1,32 +1,40 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
     public bool closeEnough;
-    [SerializeField] Canvas infoCanvas;
-    
+    [SerializeField] Canvas infoCanvasPrefab;
+    [SerializeField] private string infoText;
 
+    private Canvas _instantiatedCanvas;
 
     public void ShowInfo(Camera camera)
     {
-        infoCanvas.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
-        if (!infoCanvas.isActiveAndEnabled)
+        infoCanvasPrefab.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
+        
+        if (_instantiatedCanvas == null)
         {
-            infoCanvas.transform.SetParent(transform);
-            
-            infoCanvas.gameObject.SetActive(true);
+            infoCanvasPrefab.worldCamera = camera;
+            infoCanvasPrefab.GetComponentInChildren<TextMeshProUGUI>().SetText(infoText);
+            _instantiatedCanvas = Instantiate(infoCanvasPrefab, transform);
+        }
+        else
+        {
+            _instantiatedCanvas.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
         }
     }
     
     public void HideInfo()
     {
-        if (infoCanvas.isActiveAndEnabled)
+        if (_instantiatedCanvas != null)
         {
-            infoCanvas.gameObject.SetActive(false);
+            Destroy(_instantiatedCanvas.gameObject);
         }
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
