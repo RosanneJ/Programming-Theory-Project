@@ -833,9 +833,9 @@ MonoBehaviour:
   infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
   infoText: This is a shovel
   xPositionHold: 1
-  yPositionHold: 0.3
+  yPositionHold: 0
   xRotationHold: 40
-  yRotationHold: 180
+  yRotationHold: 90
   zRotationHold: 0
 --- !u!135 &2087593748
 SphereCollider:
