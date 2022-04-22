@@ -7,6 +7,8 @@ TagManager:
   - Terrain
   - Tool
   - Garden
+  - Pot
+  - PotPlant
   layers:
   - Default
   - TransparentFX
