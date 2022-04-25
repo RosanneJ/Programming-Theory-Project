@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: f14c66ab85bc2964d87522bbdc538fe9, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -234,6 +234,36 @@ Transform:
   m_Father: {fileID: 903179139}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &603823342
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 603823343}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &603823343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603823342}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0038, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1885039958}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &746946430
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -283,7 +313,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9218221822711795723, guid: 1cd4a9e17c67b9641aa507f86d19c7df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3.66
       objectReference: {fileID: 0}
     - target: {fileID: 9218221822711795723, guid: 1cd4a9e17c67b9641aa507f86d19c7df, type: 3}
       propertyPath: m_LocalPosition.z
@@ -463,11 +493,45 @@ MonoBehaviour:
   controller: {fileID: 903179138}
   groundCheck: {fileID: 526398356}
   playerCamera: {fileID: 1685677636}
-  gravity: -9.81
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!4 &997569422 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 480498, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
+  m_PrefabInstance: {fileID: 2089512271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1487324470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1487324471}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1487324471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487324470}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.4, z: 13.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2087593750}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1575782229 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 179056, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
@@ -487,12 +551,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
   infoText: This is a watering can
+  groundCheck: {fileID: 997569422}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
   xPositionHold: 1
   yPositionHold: 0
   zPositionHold: 0
   xRotationHold: 0
   yRotationHold: 90
   zRotationHold: 0
+  zRotationTipping: 55
   tippingSpeed: 8
 --- !u!135 &1575782232
 SphereCollider:
@@ -702,8 +771,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
   infoText: Hit him with water
-  MovingSpeed: 300
+  groundCheck: {fileID: 603823343}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  MovingSpeed: 350
   DistanceBeforeTurn: 4
+--- !u!4 &1885039958 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9218221822711795723, guid: 1cd4a9e17c67b9641aa507f86d19c7df, type: 3}
+  m_PrefabInstance: {fileID: 746946430}
+  m_PrefabAsset: {fileID: 0}
 --- !u!54 &1885039959
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -712,7 +790,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885039956}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 12
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -752,12 +830,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infoCanvasPrefab: {fileID: 3703891510118660414, guid: 60a15a381d358c84aa8043f3c4b74cce, type: 3}
   infoText: This is a shovel
+  groundCheck: {fileID: 1487324471}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
   xPositionHold: 1
   yPositionHold: 0
   zPositionHold: 0
   xRotationHold: 40
-  yRotationHold: 90
+  yRotationHold: -180
   zRotationHold: 0
+  zRotationTipping: -55
+  tippingSpeed: 8
 --- !u!135 &2087593748
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -771,6 +855,11 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 40
   m_Center: {x: 0, y: 0, z: 12}
+--- !u!4 &2087593750 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 408744, guid: df49161344bb1984fa65e7ccd3a06653, type: 3}
+  m_PrefabInstance: {fileID: 299652302}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2089512271
 PrefabInstance:
   m_ObjectHideFlags: 0

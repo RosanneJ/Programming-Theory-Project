@@ -7,8 +7,7 @@ public class PlayerController : MonoBehaviour
     public CharacterController controller;
     public Transform groundCheck;
     public Camera playerCamera;
-    
-    public float gravity = -9.81f;
+
     public float groundDistance;
     public LayerMask groundMask;
 
@@ -46,7 +45,7 @@ public class PlayerController : MonoBehaviour
             _velocity.y = -2f;
         }
 
-        _velocity.y += gravity * Time.deltaTime;
+        _velocity.y += GameManager.gravity * Time.deltaTime;
 
         controller.Move(_velocity * Time.deltaTime);
 

@@ -8,11 +8,34 @@ public class Interactable : MonoBehaviour
 {
     [SerializeField] Canvas infoCanvasPrefab;
     [SerializeField] private string infoText;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
 
     protected bool ShouldShowInfo = true;
+    protected Rigidbody _rb;
     
     private bool _closeEnough;
     private Canvas _instantiatedCanvas;
+    private bool _isGrounded;
+    private Vector3 _velocity;
+
+    protected void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    protected void Update()
+    {
+        _isGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundMask);
+
+        if (_isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = -2f;
+        }
+
+        _velocity.y += GameManager.gravity * Time.deltaTime;
+        _rb.AddForce(Vector3.up * _velocity.y, ForceMode.Acceleration);
+    }
 
     public void UpdateInformationPanel(Camera playerCamera)
     {

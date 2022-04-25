@@ -11,20 +11,13 @@ public class WalkingGarden : Interactable
 
     public float DistanceBeforeTurn = 4f;
 
-    private Rigidbody _rb;
-
     private bool _changeDirection = true;
     private Vector3 _previousPosition;
     private Quaternion _targetDirection;
 
-    private void Start()
-    {
-        _rb = GetComponent<Rigidbody>();
-    }
-
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         // move je kontje
         _rb.velocity = transform.forward * MovingSpeed * Time.deltaTime;
@@ -42,5 +35,6 @@ public class WalkingGarden : Interactable
 
         // check if distance before turn is reached
         _changeDirection = Vector3.Distance(_previousPosition, transform.position) >= DistanceBeforeTurn;
+        base.Update();
     }
 }
