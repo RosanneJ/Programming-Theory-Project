@@ -33,7 +33,7 @@ public class Interactable : MonoBehaviour
             _velocity.y = -2f;
         }
 
-        _velocity.y += GameManager.gravity * Time.deltaTime;
+        _velocity.y += GameManager.Gravity * Time.deltaTime;
         _rb.AddForce(Vector3.up * _velocity.y, ForceMode.Acceleration);
     }
 

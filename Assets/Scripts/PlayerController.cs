@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
             _velocity.y = -2f;
         }
 
-        _velocity.y += GameManager.gravity * Time.deltaTime;
+        _velocity.y += GameManager.Gravity * Time.deltaTime;
 
         controller.Move(_velocity * Time.deltaTime);
 
