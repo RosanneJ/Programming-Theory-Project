@@ -9,14 +9,14 @@ public class Interactable : MonoBehaviour
     [SerializeField] Canvas infoCanvasPrefab;
     [SerializeField] private string infoText;
 
-    protected bool shouldShowInfo = true;
+    protected bool ShouldShowInfo = true;
     
     private bool _closeEnough;
     private Canvas _instantiatedCanvas;
 
     public void UpdateInformationPanel(Camera playerCamera)
     {
-        if (_closeEnough && shouldShowInfo)
+        if (_closeEnough && ShouldShowInfo)
         {
             ShowInfo(playerCamera);
         }
@@ -42,7 +42,7 @@ public class Interactable : MonoBehaviour
         }
     }
     
-    private void HideInfo()
+    public void HideInfo()
     {
         if (_instantiatedCanvas != null)
         {

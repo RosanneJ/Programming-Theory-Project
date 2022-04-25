@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class WalkingGarden : MonoBehaviour
+public class WalkingGarden : Interactable
 {
     public float MovingSpeed = 1f;
 
