@@ -1,89 +1,73 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
+// INHERITANCE
 public abstract class Tool : Interactable
 {
-    [SerializeField] protected float xPositionHold;
-    [SerializeField] protected float yPositionHold;
-    [SerializeField] protected float zPositionHold;
-    [SerializeField] protected float xRotationHold;
-    [SerializeField] protected float yRotationHold;
-    [SerializeField] protected float zRotationHold;
-    [SerializeField] protected  float zRotationTipping = 55;
-    [SerializeField] protected float tippingSpeed = 8;
+    [SerializeField] private float xPositionHold;
+    [SerializeField] private float xRotationHold;
+    [SerializeField] private float yRotationHold;
+    [SerializeField] private float zRotationHold;
+    [SerializeField] private float xRotationTipping;
+    [SerializeField] private float tippingSpeed;
     
     private Quaternion _endRotation;
-    private Vector3 _endPosition;
 
     private float _smashProgress = -1;
     private float _resetProgress = -1;
+
+    private Vector3 _positionHeld;
+    private Quaternion _rotationHeld;
+
+    private void Start()
+    {
+        _smashProgress = -1;
+        _resetProgress = -1;
+    }
+
+    // POLYMORPHISM
+    // ABSTRACTION
+    private new void Update()
+    {
+        ProcessSmashing();
+        CheckProgressSmashing();
+        base.Update();
+    }
     
+    public void IsDropped()
+    {
+        Rb.useGravity = true;
+        Rb.isKinematic = false;
+        ShouldShowInfo = true;
+        transform.parent = null;
+        IsGrounded = false;
+    }
 
-    protected Vector3 PositionHeld;
-    protected Quaternion RotationHeld;
-
+    // ABSTRACTION
     public void IsBeingHeldBy(Transform heldBy)
     {
         ShouldShowInfo = false;
+        IsGrounded = true;
         HideInfo();
-        
-        var rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.isKinematic = true;
-        
+
+        Rb.useGravity = false;
+        Rb.isKinematic = true;
+
         transform.parent = heldBy;
+
+        UpdatePositionHeld();
+        UpdateRotationHeld();
+    }
+    
+    // ABSTRACTION
+    public void PerformAction()
+    {
+        _endRotation = Quaternion.Euler(xRotationTipping,_rotationHeld.y, _rotationHeld.z);
         
-        PositionHeld = Vector3.forward * xPositionHold + Vector3.up * yPositionHold + Vector3.left * zPositionHold;
-        RotationHeld = Quaternion.Lerp(transform.rotation, Quaternion.Euler(xRotationHold, yRotationHold, zRotationHold), 1);
-
-        transform.localPosition = PositionHeld;
-        transform.localRotation = RotationHeld;
+        StartSmashing();
     }
 
-    private new void Start()
+    private void CheckProgressSmashing()
     {
-        // Processes
-        _smashProgress = -1;
-        _resetProgress = -1;
-        base.Start();
-    }
-
-    private new void Update()
-    {
-        // For smooth rotation, we process this every frame
-        ProcessRotation();
-        base.Update();
-    }
-
-    public void PerformAction(RaycastHit hit)
-    {
-        // calculate end rotation and position
-        float calculatedZPosition = hit.transform.position.z - transform.position.z - 2.5f;
-
-        _endPosition = new Vector3(hit.transform.position.x, hit.transform.position.y + 1,
-            calculatedZPosition);
-        _endRotation = Quaternion.Euler(RotationHeld.x,RotationHeld.y, zRotationTipping);
-
-        // kicks of the rotation process per frame (in Update > ProcessRotation)
-        _smashProgress = 0;
-    }
-
-    private void ProcessRotation()
-    {
-        // rotation is started when _smashProgress is set to zero
-        if (_smashProgress < 1 && _smashProgress >= 0)
-        {
-            _smashProgress += Time.deltaTime * tippingSpeed;
-            transform.localRotation = Quaternion.Lerp(RotationHeld, _endRotation, _smashProgress);
-            //transform.position = Vector3.Lerp(PositionHeld, _endPosition, _smashProgress);
-        }
-        else if (_resetProgress < 1 && _resetProgress >= 0)
-        {
-            _resetProgress += Time.deltaTime * tippingSpeed;
-            transform.localRotation = Quaternion.Lerp(_endRotation, RotationHeld, _resetProgress);
-            //transform.position = Vector3.Lerp(_endPosition, PositionHeld, _resetProgress);
-        }
-
         if (_smashProgress >= 1)
         {
             _smashProgress = -1;
@@ -95,14 +79,47 @@ public abstract class Tool : Interactable
             _resetProgress = -1;
         }
     }
-
-    public void IsDropped()
+    
+    private void UpdateRotationHeld()
     {
-        var rb = GetComponent<Rigidbody>();
-        rb.useGravity = true;
-        rb.isKinematic = false;
-        ShouldShowInfo = true;
-        transform.parent = null;
+        var targetRotation = Quaternion.Euler(xRotationHold, yRotationHold, zRotationHold);
+        _rotationHeld = Quaternion.Lerp(transform.rotation, targetRotation, 1);
+        transform.localRotation = targetRotation;
+    }
 
+    private void UpdatePositionHeld()
+    {
+        _positionHeld = Vector3.forward * xPositionHold;
+        transform.localPosition = _positionHeld;
+    }
+
+    private void StartSmashing()
+    {
+        _smashProgress = 0;
+    }
+
+    // ABSTRACTION
+    private void ProcessSmashing()
+    {
+        if (_smashProgress < 1 && _smashProgress >= 0)
+        {
+            SmashRotation();
+        }
+        else if (_resetProgress < 1 && _resetProgress >= 0)
+        {
+            RotateBack();
+        }
+    }
+
+    private void RotateBack()
+    {
+        _resetProgress += Time.deltaTime * tippingSpeed;
+        transform.localRotation = Quaternion.Lerp(_endRotation, _rotationHeld, _resetProgress);
+    }
+
+    private void SmashRotation()
+    {
+        _smashProgress += Time.deltaTime * tippingSpeed;
+        transform.localRotation = Quaternion.Lerp(_rotationHeld, _endRotation, _smashProgress);
     }
 }

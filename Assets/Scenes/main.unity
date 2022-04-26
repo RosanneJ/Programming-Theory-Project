@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 776450197}
   m_Layer: 7
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -486,13 +486,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   xPositionHold: 1
-  yPositionHold: 0
-  zPositionHold: 0
   xRotationHold: 0
   yRotationHold: 90
   zRotationHold: 0
-  zRotationTipping: 55
-  tippingSpeed: 8
+  xRotationTipping: 45
+  tippingSpeed: 1
 --- !u!135 &1575782232
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -706,13 +704,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   xPositionHold: 1
-  yPositionHold: 0
-  zPositionHold: 0
   xRotationHold: 40
   yRotationHold: -180
   zRotationHold: 0
-  zRotationTipping: -55
-  tippingSpeed: 8
+  xRotationTipping: 45
+  tippingSpeed: 2
 --- !u!135 &2087593748
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -776,19 +772,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 479256, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7070803
+      value: 0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 479256, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0061212284
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 479256, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7070803
+      value: 0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 479256, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0061212284
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 479256, guid: 220c818457a8d2441bf84edb4edee095, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -827,6 +823,7 @@ GameObject:
   - component: {fileID: 2094079286}
   - component: {fileID: 2094079289}
   - component: {fileID: 2094079288}
+  - component: {fileID: 2094079287}
   m_Layer: 6
   m_Name: PlayerBody
   m_TagString: Player
@@ -848,6 +845,19 @@ Transform:
   m_Father: {fileID: 903179139}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2094079287
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094079285}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000002, y: 2, z: 1.0000005}
+  m_Center: {x: 0.00000005960465, y: 0, z: -0.00000008940699}
 --- !u!23 &2094079288
 MeshRenderer:
   m_ObjectHideFlags: 0

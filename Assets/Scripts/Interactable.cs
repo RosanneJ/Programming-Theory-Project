@@ -1,92 +1,37 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public class Interactable : InformationUnit
 {
-    [SerializeField] Canvas infoCanvasPrefab;
-    [SerializeField] private string infoText;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
 
-    protected bool ShouldShowInfo = true;
-    protected Rigidbody _rb;
+    // ENCAPSULATION
+    protected Rigidbody Rb { get; private set; }
+    protected bool IsGrounded { get; set; }
     
-    private bool _closeEnough;
-    private Canvas _instantiatedCanvas;
-    private bool _isGrounded;
     private Vector3 _velocity;
 
-    protected void Start()
+    protected new void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        Rb = GetComponent<Rigidbody>();
+        base.Awake();
     }
 
     protected void Update()
     {
-        _isGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundMask);
+        UpdateGravity();
+    }
 
-        if (_isGrounded && _velocity.y < 0)
+    private void UpdateGravity()
+    {
+        IsGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundMask);
+
+        if (IsGrounded && _velocity.y < 0)
         {
             _velocity.y = -2f;
         }
 
         _velocity.y += GameManager.Gravity * Time.deltaTime;
-        _rb.AddForce(Vector3.up * _velocity.y, ForceMode.Acceleration);
-    }
-
-    public void UpdateInformationPanel(Camera playerCamera)
-    {
-        if (_closeEnough && ShouldShowInfo)
-        {
-            ShowInfo(playerCamera);
-        }
-        else
-        {
-            HideInfo();
-        }
-    }
-
-    private void ShowInfo(Camera playerCamera)
-    {
-        infoCanvasPrefab.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
-        
-        if (_instantiatedCanvas == null)
-        {
-            infoCanvasPrefab.worldCamera = playerCamera;
-            infoCanvasPrefab.GetComponentInChildren<TextMeshProUGUI>().SetText(infoText);
-            _instantiatedCanvas = Instantiate(infoCanvasPrefab, transform);
-        }
-        else
-        {
-            _instantiatedCanvas.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
-        }
-    }
-    
-    public void HideInfo()
-    {
-        if (_instantiatedCanvas != null)
-        {
-            Destroy(_instantiatedCanvas.gameObject);
-        }
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            _closeEnough = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            _closeEnough = false;
-        }
+        Rb.AddForce(Vector3.up * _velocity.y, ForceMode.Acceleration);
     }
 }

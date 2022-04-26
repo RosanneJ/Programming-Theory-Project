@@ -2,9 +2,9 @@
 
 public class Shovel : Tool
 {
-    public new void PerformAction(RaycastHit hit)
+    public new void PerformAction()
     {
         Debug.Log("Using the Shovel");
-        base.PerformAction(hit);
+        base.PerformAction();
     }
 }

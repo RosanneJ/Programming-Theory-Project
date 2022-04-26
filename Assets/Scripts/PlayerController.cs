@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public CharacterController controller;
-    public Transform groundCheck;
-    public Camera playerCamera;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private  Transform groundCheck;
+    [SerializeField] private  Camera playerCamera;
 
-    public float groundDistance;
-    public LayerMask groundMask;
+    [SerializeField] private  float groundDistance;
+    [SerializeField] private  LayerMask groundMask;
 
     private float _xRotation = 0f;
     private Tool _mToolHeld;
@@ -24,6 +23,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    // ABSTRACTION
     void Update()
     {
         UpdateViewDirection();
@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ABSTRACTION
     private void PerformAction(RaycastHit hit)
     {
         switch (hit.transform.tag)
@@ -87,13 +88,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ABSTRACTION
     private void UseTool(RaycastHit hit)
     {
         if (_mToolHeld == null) return;
         
-        _mToolHeld.PerformAction(hit);
+        _mToolHeld.PerformAction();
     }
 
+    // ABSTRACTION
     private void PickUpTool(Tool newTool)
     {
         DropToolInPossession();

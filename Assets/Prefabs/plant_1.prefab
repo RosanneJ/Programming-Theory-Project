@@ -164,8 +164,8 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
-  MovingSpeed: 350
-  DistanceBeforeTurn: 4
+  movingSpeed: 200
+  distanceBeforeTurn: 4
 --- !u!1 &4477155559114767372
 GameObject:
   m_ObjectHideFlags: 0

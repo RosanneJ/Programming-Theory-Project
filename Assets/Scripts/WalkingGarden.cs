@@ -1,40 +1,45 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class WalkingGarden : Interactable
 {
-    public float MovingSpeed = 1f;
-
-    public float DistanceBeforeTurn = 4f;
+    [SerializeField] private float movingSpeed = 1f;
+    [SerializeField] private float distanceBeforeTurn = 4f;
 
     private bool _changeDirection = true;
     private Vector3 _previousPosition;
     private Quaternion _targetDirection;
 
-
-    // Update is called once per frame
     new void Update()
     {
-        // move je kontje
-        _rb.velocity = transform.forward * MovingSpeed * Time.deltaTime;
+        MoveForwards();
         
         if (_changeDirection)
         {
-            // save starting position
             _previousPosition = transform.position;
-            
-            // turn object in random direction
-            float randomDirection = Random.Range(0, 360);
-            _targetDirection = Quaternion.Euler(0, randomDirection, 0);
-            transform.rotation = _targetDirection;
+            ChangeDirection();
         }
 
-        // check if distance before turn is reached
-        _changeDirection = Vector3.Distance(_previousPosition, transform.position) >= DistanceBeforeTurn;
+        _changeDirection = ShouldChangeDirection();
+
         base.Update();
+    }
+
+    private bool ShouldChangeDirection()
+    {
+        var walkingDistanceReached = Vector3.Distance(_previousPosition, transform.position) >= distanceBeforeTurn;
+        return walkingDistanceReached || CloseEnough;
+    }
+
+    private void ChangeDirection()
+    {
+        float randomDirection = Random.Range(0, 360);
+        _targetDirection = Quaternion.Euler(0, randomDirection, 0);
+        transform.rotation = _targetDirection;
+    }
+
+    private void MoveForwards()
+    {
+        Rb.velocity = transform.forward * movingSpeed * Time.deltaTime;
     }
 }

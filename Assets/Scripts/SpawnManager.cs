@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
@@ -8,14 +7,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private int desiredPlants;
     
     private int _potPlantCount;
-
-    private void Awake()
-    {
-        for (int i = 0; i < desiredPlants; i++)
-        {
-            SpawnPotPlant();
-        }
-    }
 
     private void Update()
     {
