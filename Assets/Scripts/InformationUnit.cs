@@ -7,7 +7,7 @@ public class InformationUnit : MonoBehaviour
     [SerializeField] private Canvas infoCanvasPrefab;
     [SerializeField] private string infoText;
     
-    protected bool CloseEnough { get; private set; }
+    protected bool PlayerEnteredTrigger { get; private set; }
     protected bool ShouldShowInfo { private get; set; }
     private Canvas _instantiatedCanvas;
 
@@ -18,17 +18,23 @@ public class InformationUnit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        CloseEnough = true;
+        if (other.CompareTag("Player"))
+        {
+            PlayerEnteredTrigger = true;   
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        CloseEnough = false;
+        if (other.CompareTag("Player"))
+        {
+            PlayerEnteredTrigger = false;   
+        }
     }
 
     public void UpdateInformationPanel(Camera lookedAtBy)
     {
-        if (CloseEnough && ShouldShowInfo)
+        if (PlayerEnteredTrigger && ShouldShowInfo)
         {
             ShowInfo(lookedAtBy);
         }
@@ -38,21 +44,23 @@ public class InformationUnit : MonoBehaviour
         }
     }
 
-    protected void ShowInfo(Camera playerCamera)
+    private void ShowInfo(Camera playerCamera)
     {
-        Debug.Log("ShowInfo");
-        infoCanvasPrefab.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
-        infoCanvasPrefab.transform.position = Vector3.up * 3;
-        
+        var infoCanvasRotation = Quaternion.LookRotation(playerCamera.transform.forward);
         if (_instantiatedCanvas == null)
         {
+            infoCanvasPrefab.renderMode = RenderMode.WorldSpace;
             infoCanvasPrefab.worldCamera = playerCamera;
-            infoCanvasPrefab.GetComponentInChildren<TextMeshProUGUI>().SetText(infoText);
-            _instantiatedCanvas = Instantiate(infoCanvasPrefab, transform);
+            
+            var infoCanvasText = infoCanvasPrefab.GetComponentInChildren<TextMeshProUGUI>();
+            infoCanvasText.SetText(infoText);
+            
+            var infoCanvasPosition = transform.position + Vector3.up * 1;
+            _instantiatedCanvas = Instantiate(infoCanvasPrefab, infoCanvasPosition, infoCanvasRotation, transform);
         }
         else
         {
-            _instantiatedCanvas.transform.rotation = Quaternion.LookRotation(playerCamera.transform.forward);
+            _instantiatedCanvas.transform.rotation = infoCanvasRotation;
         }
     }
 

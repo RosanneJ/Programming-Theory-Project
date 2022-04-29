@@ -12,6 +12,7 @@ public class WalkingGarden : Interactable
 
     new void Update()
     {
+        base.Update();
         MoveForwards();
         
         if (_changeDirection)
@@ -22,13 +23,12 @@ public class WalkingGarden : Interactable
 
         _changeDirection = ShouldChangeDirection();
 
-        base.Update();
     }
 
     private bool ShouldChangeDirection()
     {
         var walkingDistanceReached = Vector3.Distance(_previousPosition, transform.position) >= distanceBeforeTurn;
-        return walkingDistanceReached || CloseEnough;
+        return walkingDistanceReached;
     }
 
     private void ChangeDirection()
@@ -40,6 +40,6 @@ public class WalkingGarden : Interactable
 
     private void MoveForwards()
     {
-        Rb.velocity = transform.forward * movingSpeed * Time.deltaTime;
+        Rb.AddForce(transform.forward * movingSpeed * Time.deltaTime, ForceMode.Force);
     }
 }

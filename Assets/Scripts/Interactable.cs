@@ -13,8 +13,8 @@ public class Interactable : InformationUnit
 
     protected new void Awake()
     {
-        Rb = GetComponent<Rigidbody>();
         base.Awake();
+        Rb = GetComponentInChildren<Rigidbody>();
     }
 
     protected void Update()

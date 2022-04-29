@@ -4,9 +4,9 @@
 public abstract class Tool : Interactable
 {
     [SerializeField] private float xPositionHold;
+    [SerializeField] private float yPositionHold;
+    [SerializeField] private float zPositionHold;
     [SerializeField] private float xRotationHold;
-    [SerializeField] private float yRotationHold;
-    [SerializeField] private float zRotationHold;
     [SerializeField] private float xRotationTipping;
     [SerializeField] private float tippingSpeed;
     
@@ -28,9 +28,9 @@ public abstract class Tool : Interactable
     // ABSTRACTION
     private new void Update()
     {
+        base.Update();
         ProcessSmashing();
         CheckProgressSmashing();
-        base.Update();
     }
     
     public void IsDropped()
@@ -82,14 +82,14 @@ public abstract class Tool : Interactable
     
     private void UpdateRotationHeld()
     {
-        var targetRotation = Quaternion.Euler(xRotationHold, yRotationHold, zRotationHold);
+        var targetRotation = Quaternion.Euler(xRotationHold, 0, 0);
         _rotationHeld = Quaternion.Lerp(transform.rotation, targetRotation, 1);
         transform.localRotation = targetRotation;
     }
 
     private void UpdatePositionHeld()
     {
-        _positionHeld = Vector3.forward * xPositionHold;
+        _positionHeld = new Vector3(xPositionHold, yPositionHold, zPositionHold);
         transform.localPosition = _positionHeld;
     }
 
