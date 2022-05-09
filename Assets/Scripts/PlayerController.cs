@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
             PerformAction(hit);
         }
         
-        // for development only
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             UseTool(hit);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// INHERITANCE
 public class WalkingGarden : Interactable
 {
     [SerializeField] private float movingSpeed = 1f;
@@ -10,6 +11,7 @@ public class WalkingGarden : Interactable
     private Vector3 _previousPosition;
     private Quaternion _targetDirection;
 
+    // ABSTRACTION
     new void Update()
     {
         base.Update();

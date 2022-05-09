@@ -17,6 +17,7 @@ public class Interactable : InformationUnit
         Rb = GetComponentInChildren<Rigidbody>();
     }
 
+    // ABSTRACTION
     protected void Update()
     {
         UpdateGravity();

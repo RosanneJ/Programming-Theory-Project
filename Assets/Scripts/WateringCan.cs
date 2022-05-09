@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// INHERITANCE
 public class WateringCan : Tool
 {
     public new void PerformAction()

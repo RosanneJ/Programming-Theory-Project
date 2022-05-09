@@ -7,7 +7,8 @@ public class InformationUnit : MonoBehaviour
     [SerializeField] private Canvas infoCanvasPrefab;
     [SerializeField] private string infoText;
     
-    protected bool PlayerEnteredTrigger { get; private set; }
+    // ENCAPSULATION
+    private bool PlayerEnteredTrigger { get; set; }
     protected bool ShouldShowInfo { private get; set; }
     private Canvas _instantiatedCanvas;
 
